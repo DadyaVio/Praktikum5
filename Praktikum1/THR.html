@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ramadan Mubarak 1447 H</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Lateef:wght@400;600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+  :root { --gold:#C9A84C; --green:#1A5C3A; --cream:#FDF8EE; }
+  body { font-family:'Poppins',sans-serif; background:#fff; color:#333; }
+
+  /* HERO */
+  .hero { min-height:100vh; background:linear-gradient(170deg,#fff 0%,var(--cream) 60%,#fff 100%);
+    display:flex; align-items:center; justify-content:center; text-align:center; padding:60px 20px; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; top:-100px; left:50%; transform:translateX(-50%);
+    width:600px; height:600px; border-radius:50%; border:50px solid rgba(201,168,76,.07); pointer-events:none; }
+  .moon { width:90px; height:90px; border-radius:50%; background:radial-gradient(circle at 35% 35%,#FFF5C0,var(--gold));
+    box-shadow:0 0 40px rgba(201,168,76,.5); margin:0 auto 20px; animation:glow 3s ease-in-out infinite alternate; }
+  @keyframes glow { from{box-shadow:0 0 20px rgba(201,168,76,.4)} to{box-shadow:0 0 55px rgba(201,168,76,.8)} }
+  .arabic { font-family:'Lateef',serif; font-size:3rem; color:var(--green); direction:rtl; }
+  .title  { font-family:'Cinzel Decorative',cursive; font-size:clamp(1.6rem,4vw,2.8rem);
+    background:linear-gradient(135deg,#A07828,var(--gold),#F0D080);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .divider { width:60px; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:16px auto; }
+  .subtitle { color:#777; font-size:.95rem; max-width:460px; margin:0 auto 28px; line-height:1.8; }
+
+  /* COUNTDOWN */
+  .countdown { background:var(--green); padding:50px 20px; text-align:center; }
+  .cd-label { font-family:'Cinzel Decorative',cursive; color:#F0D080; font-size:.9rem; letter-spacing:3px; margin-bottom:24px; }
+  .cd-box { background:rgba(255,255,255,.1); border:1px solid rgba(201,168,76,.4); border-radius:14px;
+    padding:18px 22px; min-width:80px; transition:transform .3s; }
+  .cd-box:hover { transform:translateY(-4px); }
+  .cd-num { font-family:'Cinzel Decorative',cursive; font-size:2.4rem; color:#fff; line-height:1; }
+  .cd-sub { font-size:.65rem; color:rgba(255,255,255,.6); letter-spacing:2px; text-transform:uppercase; margin-top:4px; }
+  .cd-sep { font-size:2rem; color:var(--gold); font-weight:700; padding-top:10px; }
+
+  /* AMALAN */
+  .amalan { padding:70px 20px; background:#fff; }
+  .sec-title { font-family:'Cinzel Decorative',cursive; color:var(--green); font-size:1.4rem; }
+  .card-a { border:1px solid rgba(201,168,76,.2); border-radius:18px; padding:28px 20px;
+    text-align:center; background:#fff; transition:all .3s; height:100%; }
+  .card-a:hover { transform:translateY(-6px); box-shadow:0 16px 40px rgba(201,168,76,.18); border-color:var(--gold); }
+  .card-a .ic { font-size:2.2rem; margin-bottom:12px; }
+  .card-a h6 { font-family:'Cinzel Decorative',cursive; color:var(--green); font-size:.8rem; margin-bottom:8px; }
+  .card-a p  { font-size:.83rem; color:#777; line-height:1.7; margin:0; }
+
+  /* THR */
+  .thr-sec { background:var(--cream); padding:70px 20px; text-align:center; }
+  .btn-thr { background:linear-gradient(135deg,#A07828,var(--gold),#F0D080); color:#fff; border:none;
+    border-radius:50px; font-family:'Cinzel Decorative',cursive; font-size:1rem; padding:14px 44px;
+    box-shadow:0 6px 24px rgba(201,168,76,.4); position:relative; overflow:hidden; transition:transform .3s,box-shadow .3s; }
+  .btn-thr::before { content:''; position:absolute; top:-50%; left:-60%; width:50%; height:200%;
+    background:rgba(255,255,255,.3); transform:skewX(-20deg); transition:left .5s; }
+  .btn-thr:hover::before { left:130%; }
+  .btn-thr:hover { transform:translateY(-3px); box-shadow:0 12px 36px rgba(201,168,76,.5); color:#fff; }
+  .pulse { animation:pulse 2s infinite; display:inline-block; }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+
+  /* MODAL */
+  #thrModal .modal-content { border:2px solid var(--gold); border-radius:22px; overflow:hidden; background:linear-gradient(160deg,#fff,var(--cream)); }
+  .m-bar { height:6px; background:linear-gradient(90deg,var(--green),var(--gold),#2E8B57,#F0D080); }
+  .m-body { text-align:center; padding:36px 28px; position:relative; overflow:hidden; }
+  .thr-icon { font-size:4.5rem; animation:bounceIn .6s ease-out; display:inline-block; }
+  @keyframes bounceIn { 0%{transform:scale(0);opacity:0} 60%{transform:scale(1.2)} 100%{transform:scale(1);opacity:1} }
+  .thr-amt { font-family:'Cinzel Decorative',cursive; font-size:clamp(1.8rem,6vw,3rem);
+    background:linear-gradient(135deg,#A07828,var(--gold),#F0D080);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    font-weight:900; animation:zoomIn .6s .3s both; }
+  @keyframes zoomIn { from{transform:scale(.5);opacity:0} to{transform:scale(1);opacity:1} }
+  .coin { position:absolute; animation:fall linear infinite; opacity:0; pointer-events:none; font-size:1.2rem; }
+  @keyframes fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(380px) rotate(540deg);opacity:0} }
+  .btn-ok { background:linear-gradient(135deg,var(--green),#2E8B57); color:#fff; border:none;
+    border-radius:50px; padding:10px 36px; font-family:'Cinzel Decorative',cursive; font-size:.85rem;
+    margin-top:20px; box-shadow:0 4px 16px rgba(26,92,58,.3); transition:transform .2s; }
+  .btn-ok:hover { transform:translateY(-2px); }
+
+  html { scroll-behavior:smooth; }
+  .amalan, .thr-sec { scroll-margin-top:10px; }
+  .section-in { animation:secIn .55s ease both; }
+  @keyframes secIn { from{opacity:.3;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+  .btn-back { display:inline-flex; align-items:center; gap:6px; margin-top:28px; background:none;
+    border:1px solid rgba(201,168,76,.4); border-radius:50px; color:var(--gold); font-size:.82rem;
+    padding:8px 22px; cursor:pointer; transition:all .3s; text-decoration:none; }
+  .btn-back:hover { background:var(--gold); color:#fff; border-color:var(--gold); }
+  footer { background:#fff; border-top:1px solid rgba(201,168,76,.2); padding:24px; text-align:center; color:#bbb; font-size:.82rem; }
+  footer strong { color:var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero" id="beranda">
+  <div style="position:relative;z-index:2;">
+    <div class="moon"></div>
+    <p class="arabic">رَمَضَانُ كَرِيمٌ</p>
+    <div class="divider"></div>
+    <h1 class="title mb-1">Ramadan Mubarak</h1>
+    <p style="color:var(--gold);letter-spacing:3px;font-size:.78rem;font-weight:600;">1447 H</p>
+    <p class="subtitle mt-3">Selamat menunaikan ibadah puasa Ramadan 1447 H. Semoga setiap amal diterima dan setiap doa dikabulkan oleh Allah SWT.</p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      <button onclick="goTo('amalan')" class="btn btn-outline-success rounded-pill px-4">📋 Amalan Ramadan</button>
+      <button onclick="goTo('thr')" class="btn rounded-pill px-4 text-white fw-semibold"
+         style="background:linear-gradient(135deg,#A07828,var(--gold));border:none;">🎁 Klaim THR</button>
+    </div>
+  </div>
+</section>
+
+<!-- COUNTDOWN -->
+<section class="countdown">
+  <p class="cd-label">⏳ MENUJU IDUL FITRI 1447 H</p>
+  <div class="d-flex justify-content-center align-items-start gap-2 flex-wrap">
+    <div class="cd-box"><div class="cd-num" id="D">00</div><div class="cd-sub">Hari</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-box"><div class="cd-num" id="H">00</div><div class="cd-sub">Jam</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-box"><div class="cd-num" id="M">00</div><div class="cd-sub">Menit</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-box"><div class="cd-num" id="S">00</div><div class="cd-sub">Detik</div></div>
+  </div>
+  <p style="color:rgba(255,255,255,.5);font-size:.8rem;margin-top:16px;">🌙 1 Syawal 1447 H — 20 Maret 2026</p>
+</section>
+
+<!-- AMALAN -->
+<section class="amalan" id="amalan">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p style="color:var(--gold);letter-spacing:3px;font-size:.75rem;font-weight:600;">PANDUAN IBADAH</p>
+      <h2 class="sec-title">Amalan Utama Ramadan</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="row g-4">
+      <div class="col-6 col-md-4"><div class="card-a"><div class="ic">🌅</div><h6>Sahur</h6><p>Bangun sebelum subuh, santap sahur penuh berkah sebelum memulai puasa.</p></div></div>
+      <div class="col-6 col-md-4"><div class="card-a"><div class="ic">📖</div><h6>Tadarus</h6><p>Perbanyak membaca Al-Qur'an. Ramadan adalah bulan turunnya Al-Qur'an.</p></div></div>
+      <div class="col-6 col-md-4"><div class="card-a"><div class="ic">🕌</div><h6>Tarawih</h6><p>Dirikan shalat tarawih berjama'ah setiap malam di bulan Ramadan.</p></div></div>
+      <div class="col-6 col-md-4"><div class="card-a"><div class="ic">🤲</div><h6>Perbanyak Doa</h6><p>Waktu berbuka adalah waktu mustajab. Panjatkan doa dengan khusyu'.</p></div></div>
+      <div class="col-6 col-md-4"><div class="card-a"><div class="ic">💝</div><h6>Sedekah</h6><p>Perbanyak infaq dan tunaikan zakat fitrah. Pahala dilipatgandakan.</p></div></div>
+      <div class="col-6 col-md-4"><div class="card-a"><div class="ic">✨</div><h6>I'tikaf</h6><p>Raih Lailatul Qadar di 10 malam terakhir yang penuh kemuliaan.</p></div></div>
+    </div>
+    <div class="text-center mt-5">
+      <a class="btn-back" onclick="goTo('beranda')">↑ Kembali ke Atas</a>
+    </div>
+  </div>
+</section>
+<section class="thr-sec" id="thr">
+  <div class="container">
+    <p style="color:var(--gold);letter-spacing:3px;font-size:.75rem;font-weight:600;">SPESIAL LEBARAN</p>
+    <h2 class="sec-title" style="color:var(--green);">Ada Hadiah Untukmu! 🎁</h2>
+    <div class="divider"></div>
+    <p class="text-muted mx-auto mt-3 mb-4" style="max-width:420px;font-size:.9rem;">Sebagai bentuk syukur di bulan penuh berkah, kami menyiapkan sesuatu yang spesial untukmu.</p>
+    <div class="pulse">
+      <button class="btn-thr" onclick="openTHR()">💰 BUKA THR SAYA!</button>
+    </div>
+    <div class="d-block mt-4">
+      <a class="btn-back" onclick="goTo('beranda')">↑ Kembali ke Atas</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>🌙 Ramadan Mubarak 1447 H</strong><br>
+  Semoga Ramadanmu penuh berkah &amp; ampunan
+</footer>
+
+<!-- THR -->
+<div class="modal fade" id="thrModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="m-bar"></div>
+      <div class="m-body" id="m-body">
+        <div id="coins"></div>
+        <div class="thr-icon">🎉</div>
+        <h4 style="font-family:'Cinzel Decorative',cursive;color:var(--green);margin:14px 0 6px;font-size:1.1rem;">Selamat! Anda Mendapatkan</h4>
+        <div class="thr-amt">T · H · R</div>
+        <div class="my-3" style="font-size:1.5rem;">💰&nbsp;<strong style="font-family:'Cinzel Decorative',cursive;color:#A07828;">Rp 1.000.000</strong>&nbsp;💰</div>
+        <div class="divider"></div>
+        <p style="font-size:.85rem;color:#888;margin-top:12px;">❤️ Tunjangan Hari Raya dari kami untuk Anda.<br>Semoga membawa berkah di hari yang fitri!</p>
+        <p style="font-size:.75rem;color:#aaa;">🌙 Minal Aidin Wal Faidzin — Mohon Maaf Lahir &amp; Batin</p>
+        <button class="btn-ok" data-bs-dismiss="modal">✅ Alhamdulillah, Terima Kasih!</button>
+      </div>
+      <div class="m-bar"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Navigation with smooth scroll + animation
+  function goTo(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior:'smooth', block:'start' });
+    el.classList.remove('section-in');
+    void el.offsetWidth; // reflow
+    el.classList.add('section-in');
+  }
+
+  // Countdown 20 Maret 2026 WIB
+  const TARGET = new Date('2026-03-20T00:00:00+07:00').getTime();
+  function tick() {
+    let d = TARGET - Date.now(); if (d < 0) d = 0;
+    const p = n => String(Math.floor(n)).padStart(2,'0');
+    document.getElementById('D').textContent = p(d/86400000);
+    document.getElementById('H').textContent = p((d%86400000)/3600000);
+    document.getElementById('M').textContent = p((d%3600000)/60000);
+    document.getElementById('S').textContent = p((d%60000)/1000);
+  }
+  tick(); setInterval(tick,1000);
+
+  // THR
+  function openTHR() {
+    new bootstrap.Modal(document.getElementById('thrModal')).show();
+    const box = document.getElementById('coins'); box.innerHTML='';
+    ['💰','✨','🌙','⭐','🎁','💛'].forEach((e,i) => {
+      for (let j=0;j<3;j++) {
+        const c=document.createElement('span'); c.className='coin'; c.textContent=e;
+        c.style.left=(Math.random()*88+4)+'%';
+        c.style.animationDuration=(Math.random()*2+1.5)+'s';
+        c.style.animationDelay=(Math.random()*2.5)+'s';
+        box.appendChild(c);
+      }
+    });
+    if(navigator.vibrate) navigator.vibrate([80,40,80,40,160]);
+  }
+</script>
+</body>
+</html>

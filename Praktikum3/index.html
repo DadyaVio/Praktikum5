@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AJAX — Data Profil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:          #f5f4f0;
+      --surface:     #ffffff;
+      --surface-alt: #f9f8f5;
+      --border:      rgba(0,0,0,0.08);
+      --border-md:   rgba(0,0,0,0.14);
+      --text:        #111110;
+      --text-2:      #6f6e69;
+      --text-3:      #a8a49e;
+      --accent-bg:   #111110;
+      --accent-fg:   #ffffff;
+      --success:     #1d9e75;
+      --success-bg:  #e1f5ee;
+      --info:        #185fa5;
+      --info-bg:     #e6f1fb;
+      --warn:        #ba7517;
+      --warn-bg:     #faeeda;
+      --r-sm:        8px;
+      --r-md:        12px;
+      --r-lg:        16px;
+      --r-xl:        24px;
+      --mono:        'Geist Mono', monospace;
+      --sans:        'Geist', system-ui, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:          #111110;
+        --surface:     #1c1c1a;
+        --surface-alt: #222220;
+        --border:      rgba(255,255,255,0.07);
+        --border-md:   rgba(255,255,255,0.12);
+        --text:        #edece8;
+        --text-2:      #9a9891;
+        --text-3:      #5e5c56;
+        --accent-bg:   #edece8;
+        --accent-fg:   #111110;
+        --success:     #5dcaa5;
+        --success-bg:  #04342c;
+        --info:        #85b7eb;
+        --info-bg:     #042c53;
+        --warn:        #ef9f27;
+        --warn-bg:     #412402;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 16px 80px;
+    }
+
+    .topbar {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0 0;
+      margin-bottom: 40px;
+    }
+
+    .topbar-logo { display: flex; align-items: center; gap: 8px; }
+    .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
+    .topbar-brand { font-size: 13px; font-weight: 500; color: var(--text-2); letter-spacing: 0.01em; }
+    .topbar-badge {
+      font-family: var(--mono); font-size: 11px; color: var(--text-3);
+      background: var(--surface); border: 0.5px solid var(--border-md);
+      border-radius: 100px; padding: 4px 10px;
+    }
+
+    .hero { width: 100%; max-width: 760px; margin-bottom: 32px; }
+
+    .hero-eyebrow { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; }
+
+    .tag {
+      font-family: var(--mono); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 100px;
+      border: 0.5px solid var(--border-md);
+      color: var(--text-2); background: var(--surface);
+    }
+
+    .tag.green {
+      color: var(--success); border-color: rgba(29,158,117,0.25); background: var(--success-bg);
+    }
+
+    h1 {
+      font-size: clamp(26px, 4vw, 38px); font-weight: 600;
+      line-height: 1.15; letter-spacing: -0.03em;
+      color: var(--text); margin-bottom: 10px;
+    }
+
+    .hero-sub { font-size: 15px; color: var(--text-2); line-height: 1.6; max-width: 420px; }
+
+    code {
+      font-family: var(--mono); font-size: 11px;
+      background: var(--surface-alt); border: 0.5px solid var(--border-md);
+      border-radius: 5px; padding: 1px 6px; color: var(--info);
+    }
+
+    .card {
+      width: 100%; max-width: 760px;
+      background: var(--surface);
+      border-radius: var(--r-xl);
+      border: 0.5px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 0 0 0.5px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+
+    .card-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px; border-bottom: 0.5px solid var(--border);
+    }
+
+    .card-head-left { display: flex; align-items: center; gap: 10px; }
+
+    .head-icon {
+      width: 34px; height: 34px; border-radius: var(--r-sm);
+      background: var(--surface-alt); border: 0.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    .head-icon svg { width: 16px; height: 16px; stroke: var(--text-2); }
+    .head-title { font-size: 14px; font-weight: 500; color: var(--text); }
+    .head-sub { font-size: 12px; color: var(--text-3); margin-top: 1px; }
+
+    #btn-fetch {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: var(--sans); font-size: 13px; font-weight: 500;
+      color: var(--accent-fg); background: var(--accent-bg);
+      border: none; border-radius: var(--r-md); padding: 8px 16px;
+      cursor: pointer; transition: opacity 0.15s, transform 0.1s; white-space: nowrap;
+    }
+
+    #btn-fetch:hover { opacity: 0.82; }
+    #btn-fetch:active { transform: scale(0.97); }
+    #btn-fetch:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    #btn-fetch svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    .spin-ring {
+      width: 14px; height: 14px;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-top-color: var(--accent-fg);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none; flex-shrink: 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #btn-fetch.loading .btn-icon { display: none; }
+    #btn-fetch.loading .spin-ring { display: block; }
+
+    .card-body { padding: 24px; }
+
+    .empty {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 40px 20px; gap: 12px;
+    }
+
+    .empty-icon {
+      width: 48px; height: 48px; border-radius: var(--r-md);
+      background: var(--surface-alt); border: 0.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .empty-icon svg { width: 22px; height: 22px; stroke: var(--text-3); }
+    .empty-title { font-size: 14px; font-weight: 500; color: var(--text-2); }
+    .empty-hint { font-size: 12px; color: var(--text-3); font-family: var(--mono); }
+
+    .profile-grid { display: grid; gap: 10px; }
+
+    .stats-bar { display: flex; gap: 1px; margin-bottom: 12px; }
+
+    .stat {
+      flex: 1; background: var(--surface-alt); border: 0.5px solid var(--border);
+      padding: 12px 14px; text-align: center;
+    }
+
+    .stats-bar .stat:first-child { border-radius: var(--r-sm) 0 0 var(--r-sm); }
+    .stats-bar .stat:last-child  { border-radius: 0 var(--r-sm) var(--r-sm) 0; }
+    .stats-bar .stat:not(:first-child):not(:last-child) { border-radius: 0; }
+
+    .stat-val { font-size: 22px; font-weight: 600; color: var(--text); letter-spacing: -0.03em; line-height: 1; }
+    .stat-lbl { font-family: var(--mono); font-size: 10px; color: var(--text-3); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .profile-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 16px;
+      background: var(--surface-alt);
+      border-radius: var(--r-lg);
+      border: 0.5px solid var(--border);
+      transition: border-color 0.15s;
+      animation: fadeUp 0.3s ease both;
+    }
+
+    .profile-row:hover { border-color: var(--border-md); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 600; flex-shrink: 0; letter-spacing: -0.01em;
+    }
+
+    .av-blue   { background: var(--info-bg);    color: var(--info); }
+    .av-green  { background: var(--success-bg); color: var(--success); }
+    .av-warn   { background: var(--warn-bg);    color: var(--warn); }
+    .av-purple { background: #eeedfe; color: #534ab7; }
+
+    @media (prefers-color-scheme: dark) {
+      .av-purple { background: #26215c; color: #afa9ec; }
+    }
+
+    .row-main {
+      flex: 1; display: flex; align-items: center;
+      flex-wrap: wrap; gap: 6px 0;
+    }
+
+    .row-name { font-size: 14px; font-weight: 500; color: var(--text); min-width: 130px; }
+
+    .divider-pipe { width: 0.5px; height: 14px; background: var(--border-md); margin: 0 14px; flex-shrink: 0; }
+
+    .row-field { display: flex; align-items: baseline; gap: 5px; }
+    .field-label { font-family: var(--mono); font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); }
+    .field-val { font-size: 13px; color: var(--text-2); }
+    .row-index { font-family: var(--mono); font-size: 11px; color: var(--text-3); min-width: 24px; text-align: right; }
+
+    .card-foot {
+      padding: 14px 24px; border-top: 0.5px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    }
+
+    .foot-info { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+    .foot-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-3); }
+    .foot-dot.online { background: var(--success); }
+    .foot-right { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+
+    .error-box {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 14px 16px;
+      background: #fcebeb;
+      border: 0.5px solid rgba(162,45,45,0.2);
+      border-radius: var(--r-md);
+      animation: fadeUp 0.25s ease both;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .error-box { background: #501313; border-color: rgba(240,149,149,0.15); }
+    }
+
+    .error-icon { width: 16px; height: 16px; stroke: #a32d2d; flex-shrink: 0; margin-top: 1px; }
+
+    @media (prefers-color-scheme: dark) { .error-icon { stroke: #f09595; } }
+
+    .error-title { font-size: 13px; font-weight: 500; color: #791f1f; margin-bottom: 2px; }
+    .error-msg-text { font-family: var(--mono); font-size: 11px; color: #a32d2d; }
+
+    @media (prefers-color-scheme: dark) {
+      .error-title { color: #f7c1c1; }
+      .error-msg-text { color: #f09595; }
+    }
+
+    .code-hint {
+      width: 100%; max-width: 760px; margin-top: 16px;
+      background: var(--surface); border: 0.5px solid var(--border);
+      border-radius: var(--r-lg); padding: 16px 20px;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+
+    .code-hint-icon {
+      width: 30px; height: 30px; border-radius: var(--r-sm);
+      background: var(--warn-bg); border: 0.5px solid rgba(186,117,23,0.2);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    .code-hint-icon svg { width: 15px; height: 15px; stroke: var(--warn); }
+    .hint-text { font-size: 12px; color: var(--text-2); line-height: 1.7; }
+    .hint-text strong { font-weight: 500; color: var(--text); }
+
+    @media (max-width: 500px) {
+      .divider-pipe { display: none; }
+      .row-main { flex-direction: column; align-items: flex-start; gap: 4px; }
+      .card-head { flex-direction: column; align-items: flex-start; gap: 12px; }
+      h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="topbar">
+    <div class="topbar-logo">
+      <div class="logo-dot"></div>
+      <span class="topbar-brand">ajax-demo</span>
+    </div>
+    <span class="topbar-badge">Tugas Modul AJAX</span>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-eyebrow">
+      <span class="tag">JavaScript</span>
+      <span class="tag green">Live</span>
+    </div>
+    <h1>Data Profil<br>tanpa Reload</h1>
+    <p class="hero-sub">Klik tombol untuk mengambil data JSON dari <code>data.php</code> menggunakan Fetch API.</p>
+  </section>
+
+  <div class="card">
+
+    <div class="card-head">
+      <div class="card-head-left">
+        <div class="head-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <div>
+          <div class="head-title">Daftar Profil</div>
+          <div class="head-sub">data.php — application/json</div>
+        </div>
+      </div>
+
+      <button id="btn-fetch">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/>
+          <polyline points="1 20 1 14 7 14"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+        </svg>
+        <div class="spin-ring"></div>
+        Tampilkan Profil
+      </button>
+    </div>
+
+    <div class="card-body">
+      <div id="hasil-profil">
+        <div class="empty">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <div class="empty-title">Belum ada data</div>
+          <div class="empty-hint">Tekan "Tampilkan Profil" untuk memuat</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-foot">
+      <div class="foot-info">
+        <div class="foot-dot" id="status-dot"></div>
+        <span id="status-text">Menunggu permintaan</span>
+      </div>
+      <div class="foot-right" id="foot-time">—</div>
+    </div>
+
+  </div>
+
+  <div class="code-hint">
+    <div class="code-hint-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="16 18 22 12 16 6"/>
+        <polyline points="8 6 2 12 8 18"/>
+      </svg>
+    </div>
+    <p class="hint-text">
+      <strong>Cara kerja:</strong> tombol memicu <code>fetch('data.php')</code> &rarr; server merespons JSON &rarr;
+      <code>.json()</code> mem-parse hasilnya &rarr; data dirender ke <code>#hasil-profil</code> tanpa reload halaman.
+    </p>
+  </div>
+
+  <script>
+    const btn        = document.getElementById('btn-fetch');
+    const hasil      = document.getElementById('hasil-profil');
+    const statusDot  = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    const footTime   = document.getElementById('foot-time');
+
+    const AV = ['av-blue','av-green','av-warn','av-purple'];
+
+    function setStatus(online, msg, time) {
+      statusDot.className  = 'foot-dot' + (online ? ' online' : '');
+      statusText.textContent = msg;
+      footTime.textContent   = time || '—';
+    }
+
+    btn.addEventListener('click', () => {
+      btn.disabled = true;
+      btn.classList.add('loading');
+      setStatus(false, 'Mengambil data…', '—');
+
+      const t0 = performance.now();
+
+      fetch('data.php')
+        .then(res => {
+          if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+          return res.json();
+        })
+        .then(data => {
+          const ms = Math.round(performance.now() - t0);
+          render(data);
+          setStatus(true, data.length + ' profil dimuat', ms + ' ms');
+        })
+        .catch(err => {
+          renderError(err.message);
+          setStatus(false, 'Gagal mengambil data', '—');
+        })
+        .finally(() => {
+          btn.disabled = false;
+          btn.classList.remove('loading');
+        });
+    });
+
+    function render(data) {
+      if (!Array.isArray(data) || !data.length) {
+        hasil.innerHTML = '<p style="font-size:13px;color:var(--text-3);text-align:center;padding:24px 0">Tidak ada data.</p>';
+        return;
+      }
+
+      const jobs   = new Set(data.map(d => d.pekerjaan)).size;
+      const cities = new Set(data.map(d => d.lokasi)).size;
+
+      let html = '<div class="profile-grid">';
+
+      html += '<div class="stats-bar">'
+            + '<div class="stat"><div class="stat-val">' + data.length + '</div><div class="stat-lbl">Total</div></div>'
+            + '<div class="stat"><div class="stat-val">' + jobs  + '</div><div class="stat-lbl">Profesi</div></div>'
+            + '<div class="stat"><div class="stat-val">' + cities + '</div><div class="stat-lbl">Kota</div></div>'
+            + '</div>';
+
+      data.forEach(function(p, i) {
+        var av  = AV[i % AV.length];
+        var ini = esc((p.nama || '??').slice(0,2).toUpperCase());
+        html += '<div class="profile-row" style="animation-delay:' + (i * 60) + 'ms">'
+              + '<div class="avatar ' + av + '">' + ini + '</div>'
+              + '<div class="row-main">'
+              + '<span class="row-name">' + esc(p.nama) + '</span>'
+              + '<div class="divider-pipe"></div>'
+              + '<div class="row-field"><span class="field-label">Pekerjaan</span><span class="field-val">' + esc(p.pekerjaan) + '</span></div>'
+              + '<div class="divider-pipe"></div>'
+              + '<div class="row-field"><span class="field-label">Lokasi</span><span class="field-val">' + esc(p.lokasi) + '</span></div>'
+              + '</div>'
+              + '<div class="row-index">0' + (i+1) + '</div>'
+              + '</div>';
+      });
+
+      html += '</div>';
+      hasil.innerHTML = html;
+    }
+
+    function renderError(msg) {
+      hasil.innerHTML = '<div class="error-box">'
+        + '<svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
+        + '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+        + '<div><div class="error-title">Gagal memuat data</div>'
+        + '<div class="error-msg-text">' + esc(msg) + '</div></div></div>';
+    }
+
+    function esc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+  </script>
+
+</body>
+</html>
